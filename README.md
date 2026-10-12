@@ -1,4 +1,4 @@
-# ⚛️ KalpanaOS — Distributed Sovereign Cognitive Infrastructure
+# ⚛️ SutraOS — Distributed Sovereign Cognitive Infrastructure
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Orchestration: Compose](https://img.shields.io/badge/Orchestration-Docker%20Compose-blue.svg)](https://docs.docker.com/)
@@ -6,9 +6,9 @@
 [![Vector DB: Qdrant](https://img.shields.io/badge/Vector%20DB-Qdrant-red.svg)](https://qdrant.tech/)
 [![Federation: NATS](https://img.shields.io/badge/Federation-NATS%20JetStream-purple.svg)](https://nats.io/)
 
-**KalpanaOS** is a next-generation, AI-native infrastructure operating system specifically engineered to run on resource-constrained edge environments. Operating under a strict **4GB RAM ceiling**, it completely bypasses massive, declarative, YAML-heavy DevOps frameworks like Kubernetes.
+**SutraOS** is a next-generation, AI-native infrastructure operating system specifically engineered to run on resource-constrained edge environments. Operating under a strict **4GB RAM ceiling**, it completely bypasses massive, declarative, YAML-heavy DevOps frameworks like Kubernetes.
 
-Instead, KalpanaOS establishes a **Distributed Cognitive Infrastructure**: a self-healing, P2P federated mesh where autonomous AI agents orchestrate containers, manage episodic memory, govern local infrastructure policies, and remediate system anomalies without human intervention.
+Instead, SutraOS establishes a **Distributed Cognitive Infrastructure**: a self-healing, P2P federated mesh where autonomous AI agents orchestrate containers, manage episodic memory, govern local infrastructure policies, and remediate system anomalies without human intervention.
 
 ---
 
@@ -17,14 +17,14 @@ Instead, KalpanaOS establishes a **Distributed Cognitive Infrastructure**: a sel
 *   ⚡ **AI-Native Control Plane:** No complex CLI commands or configuration files required. The control plane is powered by natural language, driven by an AI agent fleet using Retrieval-Augmented Generation (RAG) to understand system state.
 *   🛡️ **Sovereignty & Hardening:** Built entirely on lightweight, decentralized components (SQLite, NATS, Qdrant, Docker API). Heavy LLM inference is dynamically offloaded to the NVIDIA AI API to preserve local host resources.
 *   🌐 **Federated Edge Mesh:** Nodes operate as equal peers. They broadcast capabilities over NATS JetStream and intelligently distribute workloads to the most capable node in the mesh.
-*   💾 **Semantic Memory Lifecycle:** Infrastructure systems generate huge logs. KalpanaOS uses a background AI agent to synthesize raw logs into dense semantic insights, deleting raw logs recursively to prevent disk exhaustion.
+*   💾 **Semantic Memory Lifecycle:** Infrastructure systems generate huge logs. SutraOS uses a background AI agent to synthesize raw logs into dense semantic insights, deleting raw logs recursively to prevent disk exhaustion.
 *   🔒 **Zero-Trust sandboxing:** Containers are managed under unprivileged sandboxes with seccomp blocks, capability drops, and volume restriction rules.
 
 ---
 
 ## 🏗️ Architectural Overview
 
-KalpanaOS is built as a suite of lightweight Go microservices communicating over a local/mesh NATS JetStream event bus:
+SutraOS is built as a suite of lightweight Go microservices communicating over a local/mesh NATS JetStream event bus:
 
 ```mermaid
 graph TD
@@ -83,8 +83,8 @@ graph TD
 ## 🧩 Detailed Service & Feature Architecture
 
 ### 1. 🛡️ Sovereign Identity Layer (SIL) — W3C DID & Peer-Trust
-The **Sovereign Identity Layer (SIL)** (implemented in [services/sil](file:///Users/shu/Desktop/Kalpanaos/services/sil)) establishes decentralized trust across the edge nodes of the mesh network without relying on central certificate authorities.
-*   **W3C DID:Key Generation:** Every node generates a persistent cryptographic identity keypair using **Ed25519** upon initialization in [did.go](file:///Users/shu/Desktop/Kalpanaos/services/sil/did.go). This is formatted as a standardized **W3C did:key** string (e.g. `did:key:z6M...`) via a custom Base58BTC multicodec encoder.
+The **Sovereign Identity Layer (SIL)** (implemented in [services/sil](file:///Users/shu/Desktop/Sutraos/services/sil)) establishes decentralized trust across the edge nodes of the mesh network without relying on central certificate authorities.
+*   **W3C DID:Key Generation:** Every node generates a persistent cryptographic identity keypair using **Ed25519** upon initialization in [did.go](file:///Users/shu/Desktop/Sutraos/services/sil/did.go). This is formatted as a standardized **W3C did:key** string (e.g. `did:key:z6M...`) via a custom Base58BTC multicodec encoder.
 *   **W3C DID Document Resolution:** Resolves local identities into standard W3C DID Documents (`GET /did/document`) mapping authorization methods and assertion credentials.
 *   **Mutual Cryptographic Authentication:** Implements a two-phase challenge-response verification system:
     1.  **Challenge Issuance (`POST /did/auth/challenge`):** Generates a cryptographically secure random 32-byte hex challenge expiring after 5 minutes to prevent replay attacks.
@@ -92,55 +92,55 @@ The **Sovereign Identity Layer (SIL)** (implemented in [services/sil](file:///Us
 *   **Trusted Peer Registry:** Managed dynamically via admin APIs (`/admin/peers`) to authorize, list, or untrust neighbor edge nodes.
 
 ### 2. ⚙️ Cloud Operating Layer (COL) — RCE & ADEL Compiler
-The **Cloud Operating Layer (COL)** (implemented in [services/col](file:///Users/shu/Desktop/Kalpanaos/services/col)) serves as the direct execution engine, binding to the host's `/var/run/docker.sock` and compiling source repositories into container deployments.
-*   **Repository Cognition Engine (RCE):** Performs AST-like scanning of cloned project codebases in [rce.go](file:///Users/shu/Desktop/Kalpanaos/services/col/rce.go) to infer application topology:
+The **Cloud Operating Layer (COL)** (implemented in [services/col](file:///Users/shu/Desktop/Sutraos/services/col)) serves as the direct execution engine, binding to the host's `/var/run/docker.sock` and compiling source repositories into container deployments.
+*   **Repository Cognition Engine (RCE):** Performs AST-like scanning of cloned project codebases in [rce.go](file:///Users/shu/Desktop/Sutraos/services/col/rce.go) to infer application topology:
     *   *Node/JS:* Parses `package.json` for frontend frameworks (Next.js, React, Vue, Svelte, Angular, Astro), package managers (npm, yarn, pnpm), backend engines (Express, NestJS), and databases.
     *   *Python:* Scans `requirements.txt` and `pyproject.toml` for frameworks (FastAPI, Django, Flask) and clients.
     *   *Go:* Audits `go.mod` for Gin frameworks and dependency drivers.
     *   *Environment / Dockerfiles:* Scans `.env`, `.env.example`, and Docker config files for target databases.
-*   **Agent-Directed Execution Language (ADEL):** Coordinates container image compilation and database provisioning in [adel.go](file:///Users/shu/Desktop/Kalpanaos/services/col/adel.go) based on RCE topology:
-    *   **Auto-Provisioning Databases:** Spins up database runtimes (PostgreSQL, Redis, MongoDB) on the private `kalpana-net` network, mapping URLs dynamically.
+*   **Agent-Directed Execution Language (ADEL):** Coordinates container image compilation and database provisioning in [adel.go](file:///Users/shu/Desktop/Sutraos/services/col/adel.go) based on RCE topology:
+    *   **Auto-Provisioning Databases:** Spins up database runtimes (PostgreSQL, Redis, MongoDB) on the private `sutra-net` network, mapping URLs dynamically.
     *   **Fallback Runtimes:** Builds target images if a custom `Dockerfile` exists, or falls back to optimized language runtimes (e.g. `python:3.12-alpine`, `node:18-alpine`, `golang:1.22-alpine`).
-    *   **Ingress Routing:** Dynamically generates local ingress routes (e.g., `*.kalpana.local`) mapping applications to Nginx reverse proxy routing profiles.
-*   **Mobile OTA Compilations:** Resolves iOS IPA (`app-debug.ipa`) and Android APK (`app-debug.apk`) pre-compiled packages in [apps.go](file:///Users/shu/Desktop/Kalpanaos/services/col/apps.go), auto-generating OTA setup manifests (`manifest.plist`) for Safari installations.
+    *   **Ingress Routing:** Dynamically generates local ingress routes (e.g., `*.sutra.local`) mapping applications to Nginx reverse proxy routing profiles.
+*   **Mobile OTA Compilations:** Resolves iOS IPA (`app-debug.ipa`) and Android APK (`app-debug.apk`) pre-compiled packages in [apps.go](file:///Users/shu/Desktop/Sutraos/services/col/apps.go), auto-generating OTA setup manifests (`manifest.plist`) for Safari installations.
 
 ### 3. 🤖 Autonomous Agent Framework (AAF) — Multi-Agent Intelligence
-The **Autonomous Agent Framework (AAF)** (implemented in [services/aaf](file:///Users/shu/Desktop/Kalpanaos/services/aaf)) governs a fleet of 9 specialized, event-driven background agents communicating over NATS:
+The **Autonomous Agent Framework (AAF)** (implemented in [services/aaf](file:///Users/shu/Desktop/Sutraos/services/aaf)) governs a fleet of 9 specialized, event-driven background agents communicating over NATS:
 *   **`InfraReportAgent`:** Polls COL and IKG to aggregate telemetry into plain-English status reports.
 *   **`SearchAgent`:** Coordinates KB retrieval queries over Qdrant Vector database via SSI APIs.
 *   **`AnomalyDetectionAgent`:** Pulls live system logs (Loki) and telemetry metrics (Prometheus), feeding them into the LLM to run diagnostics.
 *   **`MetricAnalysisAgent`:** Runs predictive trend calculations on Prometheus time-series data to locate operational anomalies.
 *   **`PredictiveScalingAgent`:** Auto-scales low-risk services based on resource thresholds and drafts scaling proposals for administrators.
 *   **`KnowledgeSynthesisAgent`:** Compiles search contexts and episodic logs into structured markdown documents.
-*   **`RemediationAgent` (Self-Healing Loop):** Analyzed in [remediation_agent.go](file:///Users/shu/Desktop/Kalpanaos/services/aaf/remediation_agent.go), it queries AICP anomalies and carries out corrective actions (restarting containers, scaling replicas, rolling back to previous image versions, logging outcomes to HashiCorp Vault, and marking anomalies as resolved).
+*   **`RemediationAgent` (Self-Healing Loop):** Analyzed in [remediation_agent.go](file:///Users/shu/Desktop/Sutraos/services/aaf/remediation_agent.go), it queries AICP anomalies and carries out corrective actions (restarting containers, scaling replicas, rolling back to previous image versions, logging outcomes to HashiCorp Vault, and marking anomalies as resolved).
 *   **`SchedulerAgent` (Mesh Scheduling):** Resolves cluster topological relationships via IKG and Prometheus to schedule container workloads over NATS onto the node with the lowest resource load.
 *   **`MemoryCompressionAgent` (LLM-driven Compactor):** Fetches old episodic logs, uses the NVIDIA LLM API to synthesize them into dense abstract insights, writes the compressed summaries back to SSI, and recursively deletes the raw records to prevent edge storage exhaustion.
 
 ### 4. 📊 Cognitive Behavior & Analytics Layer (CBAL) — OLAP Telemetry
-The **Cognitive Behavior & Analytics Layer (CBAL)** (implemented in [services/cbal](file:///Users/shu/Desktop/Kalpanaos/services/cbal)) functions as the high-throughput time-series database and stream processing center:
-*   **DuckDB OLAP Analytics Engine:** Embedded analytics database (initialized in [main.go](file:///Users/shu/Desktop/Kalpanaos/services/cbal/main.go)) with strict memory boundaries (capped at 100MB RAM, single execution thread) to preserve edge resource constraints.
-*   **Redpanda Event Backbone:** Pipes internal NATS JetStream topics (`kalpana.col.events`, `kalpana.agent.heartbeat`, `kalpana.anomalies`) into Redpanda event topics.
+The **Cognitive Behavior & Analytics Layer (CBAL)** (implemented in [services/cbal](file:///Users/shu/Desktop/Sutraos/services/cbal)) functions as the high-throughput time-series database and stream processing center:
+*   **DuckDB OLAP Analytics Engine:** Embedded analytics database (initialized in [main.go](file:///Users/shu/Desktop/Sutraos/services/cbal/main.go)) with strict memory boundaries (capped at 100MB RAM, single execution thread) to preserve edge resource constraints.
+*   **Redpanda Event Backbone:** Pipes internal NATS JetStream topics (`sutra.col.events`, `sutra.agent.heartbeat`, `sutra.anomalies`) into Redpanda event topics.
 *   **Stream Processing Workers:** Concurrently processes micro-batches of telemetry events to:
     *   Write raw metric indices, container lifecycle histories, and system anomalies into DuckDB.
     *   **Enrich Telemetry with IKG:** Resolves nodes to topological regions via graph query APIs.
     *   **Remediation Storm Protection:** Tracks recovery event loops per service. If a container crashes/restarts > 5 times within a window, it halts the loop and broadcasts a critical PGE security override event.
 
 ### 5. 🔒 Policy & Governance Engine (PGE) — Constitutional Safeguards
-The **Policy & Governance Engine (PGE)** (implemented in [services/pge](file:///Users/shu/Desktop/Kalpanaos/services/pge)) serves as the inline firewall intercepting all container deployments and state changes:
-*   **Regex-based Access Policies:** Evaluates deployment requests against rulesets in [main.go](file:///Users/shu/Desktop/Kalpanaos/services/pge/main.go) (e.g. denying deletions of core services matching `kalpana-(sil|nats|pge|col|ssi|aicp|aaf|orchestrator)`).
+The **Policy & Governance Engine (PGE)** (implemented in [services/pge](file:///Users/shu/Desktop/Sutraos/services/pge)) serves as the inline firewall intercepting all container deployments and state changes:
+*   **Regex-based Access Policies:** Evaluates deployment requests against rulesets in [main.go](file:///Users/shu/Desktop/Sutraos/services/pge/main.go) (e.g. denying deletions of core services matching `sutra-(sil|nats|pge|col|ssi|aicp|aaf|orchestrator)`).
 *   **Role Enforcement:** Validates admin/agent JSON Web Tokens via SIL endpoints before executing CRUD actions on policies.
 *   **Bypass Override:** Features a bypass key (`PGE_BYPASS_TOKEN` / `godmode-override`) for emergency cluster access.
 
 ### 6. 🕸️ Infrastructure Knowledge Graph (IKG) — Real-Time Dependency Map
-The **Infrastructure Knowledge Graph (IKG)** (implemented in [services/ikg](file:///Users/shu/Desktop/Kalpanaos/services/ikg)) compiles the live topological state of the cluster:
-*   **In-Memory Adjacency List:** Highly optimized adjacency map in Go (defined in [main.go](file:///Users/shu/Desktop/Kalpanaos/services/ikg/main.go)) tracking nodes, services, and their relationships with <20MB memory footprints.
-*   **Lifecycle Syncing:** Listens to NATS `kalpana.col.events` (e.g. `deployed`, `removed`) to automatically add or remove service nodes and their network edges.
+The **Infrastructure Knowledge Graph (IKG)** (implemented in [services/ikg](file:///Users/shu/Desktop/Sutraos/services/ikg)) compiles the live topological state of the cluster:
+*   **In-Memory Adjacency List:** Highly optimized adjacency map in Go (defined in [main.go](file:///Users/shu/Desktop/Sutraos/services/ikg/main.go)) tracking nodes, services, and their relationships with <20MB memory footprints.
+*   **Lifecycle Syncing:** Listens to NATS `sutra.col.events` (e.g. `deployed`, `removed`) to automatically add or remove service nodes and their network edges.
 *   **Graph Query API:** Exposes subgraphs and full topological logs (`GET /graph/{id}`, `GET /query`) for AI planning and mesh task scheduling.
 
 ### 7. 🌐 Federated Distributed Cognition Layer (FDCL) — P2P Mesh Router
-The **Federated Distributed Cognition Layer (FDCL)** (implemented in [services/fdcl](file:///Users/shu/Desktop/Kalpanaos/services/fdcl)) enables horizontal mesh scaling across isolated edge hosts:
-*   **P2P Gossip Discovery:** Nodes broadcast local agent sets over NATS (`kalpana.fdcl.gossip` in [main.go](file:///Users/shu/Desktop/Kalpanaos/services/fdcl/main.go)) and build a shared cluster capability map, automatically pruning stale remote nodes after 60 seconds of silence.
-*   **Request-Reply Task Tunneling:** Routes jobs targeting remote capabilities to the appropriate peer node using NATS request-reply pipelines (`kalpana.aaf.tasks.<node_id>`).
+The **Federated Distributed Cognition Layer (FDCL)** (implemented in [services/fdcl](file:///Users/shu/Desktop/Sutraos/services/fdcl)) enables horizontal mesh scaling across isolated edge hosts:
+*   **P2P Gossip Discovery:** Nodes broadcast local agent sets over NATS (`sutra.fdcl.gossip` in [main.go](file:///Users/shu/Desktop/Sutraos/services/fdcl/main.go)) and build a shared cluster capability map, automatically pruning stale remote nodes after 60 seconds of silence.
+*   **Request-Reply Task Tunneling:** Routes jobs targeting remote capabilities to the appropriate peer node using NATS request-reply pipelines (`sutra.aaf.tasks.<node_id>`).
 
 ---
 
@@ -223,12 +223,12 @@ sequenceDiagram
 
 ## 🌐 Public Portal & Secure Download Registration
 
-To make hosting and exposure of KalpanaOS user-friendly, the Web UI is structured into two main access routes:
+To make hosting and exposure of SutraOS user-friendly, the Web UI is structured into two main access routes:
 
 ### 1. Public Landing Page (`/` -> `index.html`)
 The default root path serves a public landing page featuring an **About Section** detailing the OS architecture, and a **Downloads Portal** offering installation utilities:
 *   **Bootstrapper Installer Script (`install.sh`):** A shell utility to automatically check requirements and pull the stack.
-*   **CLI Control Binary (`kalpana`):** The compiled terminal controller binary.
+*   **CLI Control Binary (`sutra`):** The compiled terminal controller binary.
 
 ### 2. Administrative Console (`/dashboard.html`)
 The main control panel, chat interface, event logs, and app compiler terminals are situated on a dedicated page (`/dashboard.html`). If a user has valid session credentials stored in their browser, they bypass the login wall automatically.
@@ -260,8 +260,8 @@ curl -sSL https://<your-public-url>/install.sh | bash
 To build and deploy the SIRL daemon image on your edge node:
 ```bash
 # Clone the repository
-git clone https://github.com/Ashutoshsingh20/Kalpanaos.git
-cd Kalpanaos
+git clone https://github.com/Ashutoshsingh20/SutraOS.git
+cd SutraOS
 
 # Build services
 docker-compose build sirl
@@ -281,7 +281,7 @@ docker-compose up -d sirl
 ## 🧪 Verification & Testing Suite
 
 ### 1. Unit Testing
-We provide a comprehensive unit test suite in [dccl_test.go](file:///Users/shu/Desktop/Kalpanaos/services/sirl/dccl_test.go) that runs isolated tests across all DCCL components using unique, shared-cache SQLite memory databases.
+We provide a comprehensive unit test suite in [dccl_test.go](file:///Users/shu/Desktop/Sutraos/services/sirl/dccl_test.go) that runs isolated tests across all DCCL components using unique, shared-cache SQLite memory databases.
 
 To run tests inside a container:
 ```bash
@@ -337,4 +337,4 @@ docker exec kalpana-sirl wget -qO- \
 
 ## 📜 License
 
-KalpanaOS is an experimental research project in Autonomous Infrastructure and Distributed Cognition. Open-sourced under the [MIT License](LICENSE).
+SutraOS is an experimental research project in Autonomous Infrastructure and Distributed Cognition. Open-sourced under the [MIT License](LICENSE).
