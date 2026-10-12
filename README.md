@@ -99,9 +99,9 @@ The **Cloud Operating Layer (COL)** (implemented in [services/col](file:///Users
     *   *Go:* Audits `go.mod` for Gin frameworks and dependency drivers.
     *   *Environment / Dockerfiles:* Scans `.env`, `.env.example`, and Docker config files for target databases.
 *   **Agent-Directed Execution Language (ADEL):** Coordinates container image compilation and database provisioning in [adel.go](file:///Users/shu/Desktop/Sutraos/services/col/adel.go) based on RCE topology:
-    *   **Auto-Provisioning Databases:** Spins up database runtimes (PostgreSQL, Redis, MongoDB) on the private `sutra-net` network, mapping URLs dynamically.
+    *   **Auto-Provisioning Databases:** Spins up database runtimes (PostgreSQL, Redis, MongoDB) on the private `kalpana-net` network, mapping URLs dynamically.
     *   **Fallback Runtimes:** Builds target images if a custom `Dockerfile` exists, or falls back to optimized language runtimes (e.g. `python:3.12-alpine`, `node:18-alpine`, `golang:1.22-alpine`).
-    *   **Ingress Routing:** Dynamically generates local ingress routes (e.g., `*.sutra.local`) mapping applications to Nginx reverse proxy routing profiles.
+    *   **Ingress Routing:** Dynamically generates local ingress routes (e.g., `*.kalpana.local`) mapping applications to Nginx reverse proxy routing profiles.
 *   **Mobile OTA Compilations:** Resolves iOS IPA (`app-debug.ipa`) and Android APK (`app-debug.apk`) pre-compiled packages in [apps.go](file:///Users/shu/Desktop/Sutraos/services/col/apps.go), auto-generating OTA setup manifests (`manifest.plist`) for Safari installations.
 
 ### 3. 🤖 Autonomous Agent Framework (AAF) — Multi-Agent Intelligence
@@ -119,7 +119,7 @@ The **Autonomous Agent Framework (AAF)** (implemented in [services/aaf](file:///
 ### 4. 📊 Cognitive Behavior & Analytics Layer (CBAL) — OLAP Telemetry
 The **Cognitive Behavior & Analytics Layer (CBAL)** (implemented in [services/cbal](file:///Users/shu/Desktop/Sutraos/services/cbal)) functions as the high-throughput time-series database and stream processing center:
 *   **DuckDB OLAP Analytics Engine:** Embedded analytics database (initialized in [main.go](file:///Users/shu/Desktop/Sutraos/services/cbal/main.go)) with strict memory boundaries (capped at 100MB RAM, single execution thread) to preserve edge resource constraints.
-*   **Redpanda Event Backbone:** Pipes internal NATS JetStream topics (`sutra.col.events`, `sutra.agent.heartbeat`, `sutra.anomalies`) into Redpanda event topics.
+*   **Redpanda Event Backbone:** Pipes internal NATS JetStream topics (`kalpana.col.events`, `kalpana.agent.heartbeat`, `kalpana.anomalies`) into Redpanda event topics.
 *   **Stream Processing Workers:** Concurrently processes micro-batches of telemetry events to:
     *   Write raw metric indices, container lifecycle histories, and system anomalies into DuckDB.
     *   **Enrich Telemetry with IKG:** Resolves nodes to topological regions via graph query APIs.
@@ -127,20 +127,20 @@ The **Cognitive Behavior & Analytics Layer (CBAL)** (implemented in [services/cb
 
 ### 5. 🔒 Policy & Governance Engine (PGE) — Constitutional Safeguards
 The **Policy & Governance Engine (PGE)** (implemented in [services/pge](file:///Users/shu/Desktop/Sutraos/services/pge)) serves as the inline firewall intercepting all container deployments and state changes:
-*   **Regex-based Access Policies:** Evaluates deployment requests against rulesets in [main.go](file:///Users/shu/Desktop/Sutraos/services/pge/main.go) (e.g. denying deletions of core services matching `sutra-(sil|nats|pge|col|ssi|aicp|aaf|orchestrator)`).
+*   **Regex-based Access Policies:** Evaluates deployment requests against rulesets in [main.go](file:///Users/shu/Desktop/Sutraos/services/pge/main.go) (e.g. denying deletions of core services matching `kalpana-(sil|nats|pge|col|ssi|aicp|aaf|orchestrator)`).
 *   **Role Enforcement:** Validates admin/agent JSON Web Tokens via SIL endpoints before executing CRUD actions on policies.
 *   **Bypass Override:** Features a bypass key (`PGE_BYPASS_TOKEN` / `godmode-override`) for emergency cluster access.
 
 ### 6. 🕸️ Infrastructure Knowledge Graph (IKG) — Real-Time Dependency Map
 The **Infrastructure Knowledge Graph (IKG)** (implemented in [services/ikg](file:///Users/shu/Desktop/Sutraos/services/ikg)) compiles the live topological state of the cluster:
 *   **In-Memory Adjacency List:** Highly optimized adjacency map in Go (defined in [main.go](file:///Users/shu/Desktop/Sutraos/services/ikg/main.go)) tracking nodes, services, and their relationships with <20MB memory footprints.
-*   **Lifecycle Syncing:** Listens to NATS `sutra.col.events` (e.g. `deployed`, `removed`) to automatically add or remove service nodes and their network edges.
+*   **Lifecycle Syncing:** Listens to NATS `kalpana.col.events` (e.g. `deployed`, `removed`) to automatically add or remove service nodes and their network edges.
 *   **Graph Query API:** Exposes subgraphs and full topological logs (`GET /graph/{id}`, `GET /query`) for AI planning and mesh task scheduling.
 
 ### 7. 🌐 Federated Distributed Cognition Layer (FDCL) — P2P Mesh Router
 The **Federated Distributed Cognition Layer (FDCL)** (implemented in [services/fdcl](file:///Users/shu/Desktop/Sutraos/services/fdcl)) enables horizontal mesh scaling across isolated edge hosts:
-*   **P2P Gossip Discovery:** Nodes broadcast local agent sets over NATS (`sutra.fdcl.gossip` in [main.go](file:///Users/shu/Desktop/Sutraos/services/fdcl/main.go)) and build a shared cluster capability map, automatically pruning stale remote nodes after 60 seconds of silence.
-*   **Request-Reply Task Tunneling:** Routes jobs targeting remote capabilities to the appropriate peer node using NATS request-reply pipelines (`sutra.aaf.tasks.<node_id>`).
+*   **P2P Gossip Discovery:** Nodes broadcast local agent sets over NATS (`kalpana.fdcl.gossip` in [main.go](file:///Users/shu/Desktop/Sutraos/services/fdcl/main.go)) and build a shared cluster capability map, automatically pruning stale remote nodes after 60 seconds of silence.
+*   **Request-Reply Task Tunneling:** Routes jobs targeting remote capabilities to the appropriate peer node using NATS request-reply pipelines (`kalpana.aaf.tasks.<node_id>`).
 
 ---
 
@@ -228,7 +228,7 @@ To make hosting and exposure of SutraOS user-friendly, the Web UI is structured 
 ### 1. Public Landing Page (`/` -> `index.html`)
 The default root path serves a public landing page featuring an **About Section** detailing the OS architecture, and a **Downloads Portal** offering installation utilities:
 *   **Bootstrapper Installer Script (`install.sh`):** A shell utility to automatically check requirements and pull the stack.
-*   **CLI Control Binary (`sutra`):** The compiled terminal controller binary.
+*   **CLI Control Binary (`kalpana`):** The compiled terminal controller binary.
 
 ### 2. Administrative Console (`/dashboard.html`)
 The main control panel, chat interface, event logs, and app compiler terminals are situated on a dedicated page (`/dashboard.html`). If a user has valid session credentials stored in their browser, they bypass the login wall automatically.
